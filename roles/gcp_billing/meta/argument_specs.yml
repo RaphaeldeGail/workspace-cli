@@ -1,0 +1,31 @@
+---
+argument_specs:
+  main:
+    short_description: Configure access to the billing account
+    description:
+      - Create the Google group for billing users.
+      - Add the builder account to the Google group.
+      - Set billing usage access to the Google group for the billing account.
+    author:
+      - Raphaël de Gail
+    options:
+      billing_group_email:
+        type: 'str'
+        required: true
+        description:
+          - The email address of the billing group.
+      directory_customer_id:
+        type: 'str'
+        required: true
+        description:
+          - The ID of the customer directory hosting the Google group.
+      builder_account_name:
+        type: 'str'
+        required: true
+        description:
+          - The name of the builder service account.
+      gcp_billing_account_id:
+        type: 'str'
+        required: true
+        description:
+          - The ID of the billing account linked to the google group.

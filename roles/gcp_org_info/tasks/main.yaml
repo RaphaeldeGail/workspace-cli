@@ -1,0 +1,10 @@
+--- 
+  - name: fetch GCP organization info
+    raphaeldegail.googlecloudy.gcp_resourcemanager_organization_info:
+      domain: '{{ gcp_organization_domain }}'
+    register: organization
+
+  - name: extract output
+    set_fact:
+      organization_id: "{{ ( organization['resources'][0]['name'] | split('/') )[-1] }}"
+      directory_customer_id: "{{ organization['resources'][0]['owner']['directoryCustomerId'] }}"

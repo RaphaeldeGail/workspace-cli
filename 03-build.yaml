@@ -1,0 +1,39 @@
+---
+# file: 03-build.yaml
+- name: build the dual structure
+  hosts: orgexecutive
+  module_defaults:
+    group/raphaeldegail.googlecloudy.gcp:
+      auth_kind: '{{ auth_kind }}'
+      access_token: '{{ access_token | default(omit) }}'
+      service_account_contents: '{{ service_account_contents | default(omit) }}'
+      service_account_email: '{{ service_account_email | default(omit) }}'
+      service_account_file: '{{ service_account_file | default(omit) }}'
+    group/gcp:
+      auth_kind: '{{ auth_kind }}'
+      access_token: '{{ access_token | default(omit) }}'
+      service_account_contents: '{{ service_account_contents | default(omit) }}'
+      service_account_email: '{{ service_account_email | default(omit) }}'
+      service_account_file: '{{ service_account_file | default(omit) }}'
+    group/raphaeldegail.hcp_terraform.hcp:
+      bearer_token: '{{ bearer_token }}'
+  vars_files:
+    - definition.yaml
+
+  roles:
+    - name: get info about organization
+      role: gcp_org_info
+      tags:
+        - always
+        - gcp
+    - name: get info about root project
+      role: matching_project
+      tags:
+        - always
+        - gcp
+    - name: build the dual structure
+      role: dual_build
+      tags:
+        - gcp
+        - terraform
+        - build

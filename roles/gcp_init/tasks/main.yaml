@@ -1,0 +1,16 @@
+---
+- name: set the GCP organization IAM policy
+  raphaeldegail.googlecloudy.gcp_resourcemanager_organization_iam:
+    policy_version: '{{ policy_version }}'
+    bindings:
+      - role: roles/billing.admin
+        members: ['group:{{ finops_group_email }}']
+      - role: 'roles/iam.organizationRoleAdmin'
+        members: ['group:{{ admins_group_email }}']
+      - role: 'roles/orgpolicy.policyAdmin'
+        members: ['group:{{ policy_group_email }}']
+      - role: 'roles/resourcemanager.organizationAdmin'
+        members: ['group:{{ admins_group_email }}', 'user:{{ external_owner_email }}']
+      - role: 'roles/resourcemanager.organizationViewer'
+        members: ['group:{{ finops_group_email }}', 'group:{{ policy_group_email }}']
+    organization_id: '{{ organization_id }}'

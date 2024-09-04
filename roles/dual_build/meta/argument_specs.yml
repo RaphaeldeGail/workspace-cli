@@ -1,0 +1,107 @@
+---
+argument_specs:
+  main:
+    short_description: Build the dual structure
+    description:
+      - Create a project in a HCP Terraform organization.
+      - Create a project in a GCP organization.
+      - Create a workload identity pool.
+      - Create a workload identity pool provider.
+      - Create a builder service account.
+      - Create a workspace tag key.
+      - Create a workspace folder.
+      - Create various variables in the HCP Terraform organization.
+    author:
+      - Raphaël de Gail
+    options:
+      workspaces_folder_name:
+        type: 'str'
+        required: true
+        description:
+          - The display name of the workspace folder.        
+      hcp_tf_organization_name:
+        type: 'str'
+        required: true
+        description:
+          - the name of the HCP Terraform organization hosting the project.
+      organization_id:
+        type: 'str'
+        required: true
+        description:
+          - The ID for the GCP organization.
+      gcp_billing_account_id:
+        type: 'str'
+        required: true
+        description:
+          - The ID of the billing account linked to the google group.
+      root_project:
+              type: 'dict'
+              required: true
+              description:
+                - The definition of the root project.
+              options:
+                base_name:
+                  type: 'str'
+                  required: true
+                  description:
+                    - The user-friendly name of the project.
+                labels:
+                  type: 'dict'
+                  required: true
+                  descrption:
+                    - A map of kay/value characterizing the project.
+      gcp_organization_domain:
+        type: 'str'
+        required: true
+        description:
+          - the primary domain name of the GCP organization.
+      builder_account_name:
+        type: 'str'
+        required: true
+        description:
+          - The name of the builder service account.
+      executive_group_email:
+        type: 'str'
+        required: true
+        description:
+          - The email address for the organization executives group.
+      workspaces_tag_name:
+        type: 'str'
+        required: true
+        description:
+          - The short name for the workspace tag key.
+      building_variable_set_name:
+        type: 'str'
+        required: true
+        description:
+          - The name of the Building variable set.
+      organization_variable_set_name:
+        type: 'str'
+        required: true
+        description:
+          - The name of the Organization variable set.
+      authentication_variable_set_name:
+        type: 'str'
+        required: true
+        description:
+          - The name of the Authentication variable set.
+      bearer_token:
+        type: 'str'
+        required: true
+        description:
+          - The value of the bearer token for the HCP Terraform organization.
+      billing_group_email:
+        type: 'str'
+        required: true
+        description:
+          - The email address of the billing group.
+      gcp_region:
+        type: 'str'
+        required: true
+        description:
+          - The name of the default GCP region for the dual structure.
+      directory_customer_id:
+        type: 'str'
+        required: true
+        description:
+          - The ID of the customer directory hosting the Google group.

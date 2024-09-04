@@ -1,0 +1,23 @@
+---
+# file: 01-init.yaml
+- name: initialize the organization IAM policy for the root structure
+  hosts: orgadmin
+  module_defaults:
+    group/raphaeldegail.googlecloudy.gcp:
+      auth_kind: '{{ auth_kind }}'
+      access_token: '{{ access_token | default(omit) }}'
+      service_account_contents: '{{ service_account_contents | default(omit) }}'
+      service_account_email: '{{ service_account_email | default(omit) }}'
+      service_account_file: '{{ service_account_file | default(omit) }}'
+
+  roles:
+    - name: get info about the organization
+      role: gcp_org_info
+      tags:
+      - always
+      - gcp
+    - name: initialize the organization IAM policy for the root structure
+      role: gcp_init
+      tags:
+        - gcp
+        - init
