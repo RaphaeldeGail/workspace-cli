@@ -41,7 +41,7 @@ jobs:
       - name: Write integration-test configuration files
         env:
           CI_HCP_TERRAFORM_TOKEN: ${{ secrets.CI_HCP_TERRAFORM_TOKEN }}
-          CI_HCP_TERRAFORM_ORG: ${{ vars.CI_HCP_TERRAFORM_ORG }}
+          CI_HCP_TERRAFORM_ORG: ${{ secrets.CI_HCP_TERRAFORM_ORG }}
           CI_HCP_TERRAFORM_PROJECT: ${{ secrets.CI_HCP_TERRAFORM_PROJECT }}
           CI_HCP_TERRAFORM_OAUTH: ${{ secrets.CI_HCP_TERRAFORM_OAUTH }} 
         run: |
