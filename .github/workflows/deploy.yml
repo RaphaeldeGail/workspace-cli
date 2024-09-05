@@ -1,33 +1,15 @@
 ---
 name: Deploy the dual structure
 on:
-  release:
-    types: [released]
+  push:
+    branches: [main, develop]
 env:
   PYTHON_VERSION: '3.11'
 jobs:
-  version:
-    runs-on: ubuntu-latest
-    environment: prod
-    outputs:
-      from_file: ${{ steps.yaml-data.outputs.data }}
-    steps:
-    - uses: actions/checkout@v4
-    - name: Run read-yaml action
-      id: yaml-data
-      uses: jbutcher5/read-yaml@1.6
-      with:
-        file: './version.yml'
-        key-path: '["version"]'
-    - name: Error if version mismatch
-      run: echo "::error ::Version mismatch"
-      if: format('v{0}', steps.yaml-data.outputs.data) != github.event.release.tag_name
   playbook:
-    needs: version
-    if: format('v{0}', needs.version.outputs.from_file) == github.event.release.tag_name
     runs-on: ubuntu-latest
     # Environment where integration variables are stored
-    environment: prod
+    environment: develop
     # Add "id-token" with the intended permissions.
     permissions:
       contents: 'read'
@@ -44,13 +26,6 @@ jobs:
         run: pip install -r requirements.txt
       - name: Install ansible collections
         run: ansible-galaxy collection install -r requirements.yml
-      - id: auth
-        name: Authenticate to Google Cloud
-        uses: 'google-github-actions/auth@v2'
-        with:
-          token_format: 'access_token'
-          workload_identity_provider: ${{ secrets.CI_WORKLOAD_PROVIDER }}
-          service_account: ${{ secrets.CI_SERVICE_ACCOUNT }}
       - name: Write ansible inventory
         run: |
           mkdir inventory;
@@ -61,38 +36,29 @@ jobs:
               ansible_connection: local
               ansible_python_interpreter: ${{ steps.python.outputs.python-path }}
             hosts:
-              orgadmin:
-              roleadmin:
-              orgexecutive:
-              finops:
+              hcpadmin:
           " > inventory/local.yml
       - name: Write integration-test configuration files
         env:
-          CI_GCP_DOMAIN: ${{ secrets.CI_GCP_DOMAIN }}
-          CI_GCP_BILLING_ACCOUNT: ${{ secrets.CI_GCP_BILLING_ACCOUNT }}
-          CI_HCP_TF_ORG: ${{ secrets.CI_HCP_TF_ORG }}
-          CI_EXT_OWNER: ${{ secrets.CI_EXT_OWNER }}
-          CI_FINOPS_GROUP: ${{ secrets.CI_FINOPS_GROUP }}
-          CI_ADMINS_GROUP: ${{ secrets.CI_ADMINS_GROUP }}
-          CI_POLICY_GROUP: ${{ secrets.CI_POLICY_GROUP }}
-          CI_EXECUTIVE_GROUP: ${{ secrets.CI_EXECUTIVE_GROUP }}
-          CI_BILLING_GROUP: ${{ secrets.CI_BILLING_GROUP }}
-          CI_HCP_BEARER_TOKEN: ${{ secrets.CI_HCP_BEARER_TOKEN }}
+          CI_HCP_TERRAFORM_TOKEN: ${{ secrets.CI_HCP_TERRAFORM_TOKEN }}
+          CI_HCP_TERRAFORM_ORG: ${{ vars.CI_HCP_TERRAFORM_ORG }}
+          CI_HCP_TERRAFORM_PROJECT: ${{ secrets.CI_HCP_TERRAFORM_PROJECT }}
+          CI_HCP_TERRAFORM_OAUTH: ${{ secrets.CI_HCP_TERRAFORM_OAUTH }} 
         run: |
           mkdir group_vars;
           echo "---
-          gcp_organization_domain: $CI_GCP_DOMAIN
-          gcp_billing_account_id: $CI_GCP_BILLING_ACCOUNT
-          hcp_tf_organization_name: $CI_HCP_TF_ORG
-          external_owner_email: $CI_EXT_OWNER
-          finops_group_email: $CI_FINOPS_GROUP
-          admins_group_email: $CI_ADMINS_GROUP
-          policy_group_email: $CI_POLICY_GROUP
-          executive_group_email: $CI_EXECUTIVE_GROUP
-          billing_group_email: $CI_BILLING_GROUP
-          bearer_token: $CI_HCP_BEARER_TOKEN
-          auth_kind: accesstoken
-          access_token: ${{ steps.auth.outputs.access_token }}
+          organization_name: $CI_HCP_TERRAFORM_ORG
+          bearer_token: $CI_HCP_TERRAFORM_TOKEN
+          project: $CI_HCP_TERRAFORM_PROJECT
+          oauth_token_id: $CI_HCP_TERRAFORM_OAUTH
+          workspace:
+            name: 'demo'
+            description: 'Legendary Workstation workspace'
+            budget_allowed: 10
+            admin_group: 'nono@nono.nono'
+            finops_group: 'nono@nono.nono'
+            policy_group: 'nono@nono.nono'
+            version: '~>1.7.0'
           " > group_vars/organization.yml
       # run tests
       - name: Run ansible playbook

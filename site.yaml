@@ -1,10 +1,4 @@
 ---
 # file: site.yaml
-- name: initialize the structure
-  ansible.builtin.import_playbook: 01-init.yaml
-- name: add roles
-  ansible.builtin.import_playbook: 02-roles.yaml
-- name: build the strucure
-  ansible.builtin.import_playbook: 03-build.yaml
-- name: configure access to the billing account
-  ansible.builtin.import_playbook: 04-billing.yaml
+- name: create the workspace
+  ansible.builtin.import_playbook: 01-workspace.yaml

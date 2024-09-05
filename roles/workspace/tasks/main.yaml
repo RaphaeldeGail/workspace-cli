@@ -1,0 +1,65 @@
+---
+- name: creates the HCP Terraform workspace
+  raphaeldegail.hcp_terraform.hcp_terraform_workspace:
+    name: '{{ workspace.name }}'
+    description: '{{ workspace.description }}'
+    terraform_version: '{{ workspace.version }}'
+    auto_apply: true
+    auto_apply_run_trigger: true
+    execution_mode: remote
+    setting_overwrites: { 'execution-mode': False, 'agent-pool': False }
+    source_name: 'ansible-based client'
+    trigger_patterns:
+      - '/terraform/*.tf'
+    vcs_repo:
+      identifier: 'RaphaeldeGail/workspace-nucleation'
+      oauth_token_id: '{{ oauth_token_id }}'
+    working_directory: '/terraform'
+    project: '{{ project }}'
+    organization_name: '{{ organization_name }}'
+    state: present
+  register: result
+
+- name: creates the "budget_allowed" workspace variable
+  raphaeldegail.hcp_terraform.hcp_terraform_var:
+    key: 'budget_allowed'
+    value: '{{ workspace.budget_allowed }}'
+    description: 'the maximum spending amount allowed for the workspace.'
+    category: 'terraform'
+    hcl: false
+    sensitive: false
+    workspace_id: '{{ result.id }}'
+    state: present
+
+- name: creates the "admin_group" workspace variable
+  raphaeldegail.hcp_terraform.hcp_terraform_var:
+    key: 'admin_group'
+    value: '{{ workspace.admin_group }}'
+    description: 'the maximum spending amount allowed for the workspace.'
+    category: 'terraform'
+    hcl: false
+    sensitive: false
+    workspace_id: '{{ result.id }}'
+    state: present
+
+- name: creates the "policy_group" workspace variable
+  raphaeldegail.hcp_terraform.hcp_terraform_var:
+    key: 'policy_group'
+    value: '{{ workspace.policy_group }}'
+    description: 'Email for policy administrators group of the workspace.'
+    category: 'terraform'
+    hcl: false
+    sensitive: false
+    workspace_id: '{{ result.id }}'
+    state: present
+
+- name: creates the "finops_group" workspace variable
+  raphaeldegail.hcp_terraform.hcp_terraform_var:
+    key: 'finops_group'
+    value: '{{ workspace.finops_group }}'
+    description: 'Email for finops group of the workspace.'
+    category: 'terraform'
+    hcl: false
+    sensitive: false
+    workspace_id: '{{ result.id }}'
+    state: present

@@ -1,0 +1,13 @@
+---
+# file: 01-init.yaml
+- name: create the workspace
+  hosts: hcpadmin
+  module_defaults:
+    group/raphaeldegail.hcp_terraform.hcp:
+      bearer_token: '{{ bearer_token }}'
+
+  roles:
+    - name: create the workspace
+      role: workspace
+      tags:
+      - terraform

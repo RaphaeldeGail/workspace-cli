@@ -1,1 +1,3 @@
-# GCP - HCP Terraform - Dual Structure
+# HCP Terraform - Workspace Client
+
+Ansible-based client to manage HCP Terraform workspaces. 

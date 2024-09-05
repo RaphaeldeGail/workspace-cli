@@ -1,0 +1,66 @@
+---
+argument_specs:
+  main:
+    short_description: Creates a workspace
+    description:
+      - Creates a workspace in a HCP Terraform project.
+      - Creates various variables in the HCP Terraform project.
+    author:
+      - Raphaël de Gail
+    options:
+      workspace:
+        type: 'dict'
+        required: true
+        description:
+          - The workspace resource.
+        options:
+            name:
+              type: 'str'
+              required: true
+              description:
+                - The workspace name.
+            description:
+              type: 'str'
+              required: true
+              description:
+                - The workspace description.
+            budget_allowed:
+              type: 'str'
+              required: true
+              description:
+                - The maximum budget allowed for the workspace.
+            admin_group:
+              type: 'str'
+              required: true
+              description:
+                - The email address of the administrators of the workspace.
+            finops_group:
+              type: 'str'
+              required: true
+              description:
+                - The email address of the finops of the workspace.
+            policy_group:
+              type: 'str'
+              required: true
+              description:
+                - The email address of the policy administrators of the workspace.
+            version:
+              type: 'str'
+              required: true
+              description:
+                - The terraform version.
+      project:
+        type: 'str'
+        required: true
+        description:
+          - the ID of the HCP Terraform project hosting the workspace.
+      oauth_token_id:
+        type: 'str'
+        required: true
+        description:
+          - The ID for the oauth token to connect to the VCS provider.
+      bearer_token:
+        type: 'str'
+        required: true
+        description:
+          - The value of the bearer token for the HCP Terraform organization.

@@ -1,12 +1,5 @@
 ---
 collections:
   - name: raphaeldegail.hcp_terraform
-    version: 1.0.1
-    type: galaxy
-  - name: raphaeldegail.googlecloudy
-    version: 1.0.1
-    type: galaxy
-  - name: google.cloud
-    type: galaxy
-  - name: community.general
+    version: 1.0.2
     type: galaxy
